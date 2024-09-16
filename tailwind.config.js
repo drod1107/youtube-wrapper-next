@@ -1,12 +1,27 @@
-/** @type {import('tailwindcss').Config} */
-module.exports = {
+// src > tailwind.config.ts
+
+const config = {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        primary: "#074bae",
+        secondary: "#c66be4",
+        tertiary: "#f7f7f7",
+        quaternary: "#9962d8"
+      },
+      // lato and hind fonts applied uniformly
+      fontFamily: { 
+        lato: ["Lato", "sans-serif"],
+        hind: ["Hind", "sans-serif"]
+      }
+    }
   },
-  plugins: [],
-}
+  plugins: []
+};
+
+export default config;

@@ -1,0 +1,64 @@
+---
+title: '`getOrganization()`'
+description: Use Clerk's Backend SDK to retrieve a single organization.
+---
+
+{/* clerk/javascript file: https://github.com/clerk/javascript/blob/main/packages/backend/src/api/endpoints/OrganizationApi.ts#L117 */}
+
+Retrieves a single [`Organization`](/docs/references/backend/types/backend-organization).
+
+```ts
+function getOrganization(params: GetOrganizationParams): Promise<Organization>
+```
+
+## `GetOrganizationParams`
+
+<Properties>
+  - `organizationId | slug`
+  - `string`
+
+  The ID of the organization to retrieve, or the slug of the organization to retrieve.
+</Properties>
+
+## Examples
+
+### Retrieve by ID
+
+```tsx
+const organizationId = 'org_123'
+
+const response = await clerkClient.organizations.getOrganization({ organizationId })
+
+console.log(response)
+/*
+Organization {
+  id: 'org_123',
+  name: 'Test',
+  slug: 'test',
+  imageUrl: 'https://img.clerk.com/eyJ...',
+  hasImage: false,
+  createdBy: 'user_123',
+  createdAt: 1702488558853,
+  updatedAt: 1705536009506,
+  publicMetadata: {},
+  privateMetadata: {},
+  maxAllowedMemberships: 3,
+  adminDeleteEnabled: true,
+  members_count: undefined
+}
+*/
+```
+
+### Retrieve by slug
+
+Retrieve an organization by its slug instead of its ID.
+
+```tsx
+const slug = 'my-organization-slug'
+
+const response = await clerkClient.organizations.getOrganization({ slug })
+```
+
+## Backend API (BAPI) endpoint
+
+This method in the SDK is a wrapper around the BAPI endpoint `GET/organizations/{organization_id}`. See the [BAPI reference](/docs/reference/backend-api/tag/Organizations#operation/GetOrganization){{ target: '_blank' }} for more details.

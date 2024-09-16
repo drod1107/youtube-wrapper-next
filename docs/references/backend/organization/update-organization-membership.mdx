@@ -1,0 +1,94 @@
+---
+title: '`updateOrganizationMembership()`'
+description: Use Clerk's Backend SDK to update a user's organization membership.
+---
+
+{/* clerk/javascript file: https://github.com/clerk/javascript/blob/main/packages/backend/src/api/endpoints/OrganizationApi.ts#L201 */}
+
+Updates a user's [`OrganizationMembership`](/docs/references/backend/types/backend-organization-membership). Currently, only the role can be updated.
+
+```ts
+function updateOrganizationMembership(
+  params: UpdateOrganizationMembershipParams,
+): Promise<OrganizationMembership>
+```
+
+## `UpdateOrganizationMembershipParams`
+
+<Properties>
+  - `organizationId`
+  - `string`
+
+  The organization ID of the organization a user belongs to.
+
+  ---
+
+  - `userId`
+  - `string`
+
+  The ID of the user.
+
+  ---
+
+  - `role`
+  - `string`
+
+  The [role](/docs/organizations/roles-permissions) to assign user.
+</Properties>
+
+## Example
+
+In the following example, you can see that the returned [`OrganizationMembership`](/docs/references/backend/types/backend-organization-membership) object has its `role` property updated to `org:admin`.
+
+```tsx {{ mark: [5, 17] }}
+const organizationId = 'org_123'
+
+const userId = 'user_123'
+
+const role = 'org:admin'
+
+const response = await clerkClient.organizations.updateOrganizationMembership({
+  organizationId,
+  userId,
+  role,
+})
+
+console.log(response)
+/*
+_OrganizationMembership {
+  id: 'orgmem_123',
+  role: 'org:admin',
+  publicMetadata: {},
+  privateMetadata: {},
+  createdAt: 1702488558867,
+  updatedAt: 1705535333002,
+  organization: _Organization {
+    id: 'org_123',
+    name: 'Test Org',
+    slug: 'test-org',
+    imageUrl: 'https://img.clerk.com/eyJ...',
+    hasImage: false,
+    createdBy: 'user_123',
+    createdAt: 1702488558853,
+    updatedAt: 1705534260298,
+    publicMetadata: {},
+    privateMetadata: {},
+    maxAllowedMemberships: 3,
+    adminDeleteEnabled: true,
+    members_count: undefined
+  },
+  publicUserData: _OrganizationMembershipPublicUserData {
+    identifier: 'alexis@clerk.dev',
+    firstName: 'Alexis',
+    lastName: 'Aguilar',
+    imageUrl: 'https://img.clerk.com/eyJ...',
+    hasImage: true,
+    userId: 'user_123'
+  }
+}
+*/
+```
+
+## Backend API (BAPI) endpoint
+
+This method in the SDK is a wrapper around the BAPI endpoint `PATCH/organizations/{organization_id}/memberships/{user_id}`. See the [BAPI reference](/docs/reference/backend-api/tag/Organization-Memberships#operation/UpdateOrganizationMembership){{ target: '_blank' }} for more details.

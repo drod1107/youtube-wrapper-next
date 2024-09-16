@@ -1,0 +1,67 @@
+---
+title: '`getUserOauthAccessToken()`'
+description: Use Clerk's Backend SDK to retrieve the corresponding OAuth access token for a user.
+---
+
+{/* clerk/javascript file: https://github.com/clerk/javascript/blob/main/packages/backend/src/api/endpoints/UserApi.ts#L197 */}
+
+Retrieve the corresponding OAuth access token for a user that has previously authenticated with a particular OAuth provider.
+
+```ts
+function getUserOauthAccessToken(
+  userId: string,
+  provider: `oauth_${OAuthProvider}`,
+): Promise<OauthAccessToken[]>
+```
+
+## Parameters
+
+<Properties>
+  - `userId`
+  - `string`
+
+  The ID of the user to retrieve.
+
+  ---
+
+  - `provider`
+  - <code>oauth\_$\{[OAuthProvider](/docs/references/javascript/types/oauth#o-auth-provider)}</code>
+
+  The OAuth provider to retrieve the access token for.
+</Properties>
+
+## Example
+
+```tsx
+const userId = 'user_123'
+
+const provider = 'oauth_google'
+
+const response = await clerkClient.users.getUserOauthAccessToken(userId, provider)
+
+console.log(response)
+/*
+[
+  _OauthAccessToken {
+    provider: 'oauth_google',
+    token: 'ya29...',
+    publicMetadata: {},
+    label: null,
+    scopes: [
+      'email',
+      'https://www.googleapis.com/auth/userinfo.email',
+      'https://www.googleapis.com/auth/userinfo.profile',
+      'openid',
+      'profile'
+    ],
+    tokenSecret: undefined
+  }
+]
+*/
+```
+
+You can also explore the [working example](/docs/authentication/social-connections/oauth#get-an-o-auth-access-token-for-a-social-sign-in-provider) that demonstrates how this method retrieves a social provider's OAuth access token, enabling access to user data from both the provider and Clerk.
+
+## Backend API (BAPI) endpoint
+
+This method in the SDK is a wrapper around the BAPI endpoint `GET/users/{user_id}/oauth_access_tokens/{provider}`. See the [BAPI reference](/docs/reference/backend-api/tag/Users#operation/GetOAuthAccessToken){{ target: '_blank' }} for more details.

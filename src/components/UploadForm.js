@@ -1,90 +1,71 @@
 // src/components/UploadForm.js
-
-'use client'
-
 import { useState } from 'react';
-import { useSession } from 'next-auth/react';
 
 export default function UploadForm() {
   const [file, setFile] = useState(null);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [tags, setTags] = useState('');
-  const { data: session } = useSession();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!session) {
-      alert('You must be signed in to upload a video.');
+
+    if (!file || !title || !description) {
+      alert('Please fill out all fields.');
       return;
     }
 
-    // TODO: Implement actual upload logic here
-    console.log('Uploading:', { file, title, description, tags });
-    
-    // For now, we'll just log the data
-    alert('Upload functionality will be implemented in the next step.');
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('title', title);
+    formData.append('description', description);
+    formData.append('tags', tags);
+
+    try {
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        alert(`Video uploaded successfully! Video ID: ${data.videoId}`);
+      } else {
+        alert('An error occurred during the video upload.');
+      }
+    } catch (error) {
+      console.error('Error uploading video:', error);
+      alert('An error occurred during the video upload.');
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label htmlFor="file" className="block text-sm font-medium text-gray-700">
-          Video File
-        </label>
-        <input
-          type="file"
-          id="file"
-          accept="video/*"
-          onChange={(e) => setFile(e.target.files[0])}
-          className="mt-1 block w-full"
-          required
-        />
-      </div>
-      <div>
-        <label htmlFor="title" className="block text-sm font-medium text-gray-700">
-          Title
-        </label>
-        <input
-          type="text"
-          id="title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-          required
-        />
-      </div>
-      <div>
-        <label htmlFor="description" className="block text-sm font-medium text-gray-700">
-          Description
-        </label>
-        <textarea
-          id="description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-          rows="3"
-        ></textarea>
-      </div>
-      <div>
-        <label htmlFor="tags" className="block text-sm font-medium text-gray-700">
-          Tags (comma-separated)
-        </label>
-        <input
-          type="text"
-          id="tags"
-          value={tags}
-          onChange={(e) => setTags(e.target.value)}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-        />
-      </div>
-      <button
-        type="submit"
-        className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-      >
-        Upload Video
-      </button>
+    <form onSubmit={handleSubmit}>
+      <input
+        type="file"
+        onChange={(e) => setFile(e.target.files[0])}
+        required
+      />
+      <input
+        type="text"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        placeholder="Title"
+        required
+      />
+      <textarea
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+        placeholder="Description"
+        required
+      ></textarea>
+      <input
+        type="text"
+        value={tags}
+        onChange={(e) => setTags(e.target.value)}
+        placeholder="Tags (comma separated)"
+      />
+      <button type="submit">Upload</button>
     </form>
   );
 }

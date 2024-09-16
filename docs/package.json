@@ -1,0 +1,32 @@
+{
+    "name": "clerk-docs-2023",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "lint": "concurrently \"npm:lint:*\"",
+        "format": "prettier . --write",
+        "lint:check-links": "node ./scripts/check-links.mjs",
+        "lint:formatting": "prettier . --check",
+        "build": "astro build"
+    },
+    "devDependencies": {
+        "@clerk/testing": "^1.2.18",
+        "astro": "^3.0.0",
+        "concurrently": "^8.2.2",
+        "prettier": "^3.2.5",
+        "prettier-plugin-astro": "^0.14.0",
+        "prettier-plugin-nginx": "^1.0.3",
+        "prettier-plugin-svelte": "^3.2.6",
+        "readdirp": "^3.6.0",
+        "remark": "^15.0.1",
+        "remark-frontmatter": "^5.0.0",
+        "remark-gfm": "^4.0.0",
+        "remark-mdx": "^3.0.1",
+        "unist-util-visit": "^5.0.0",
+        "vfile": "^6.0.1",
+        "vfile-reporter": "^8.0.0"
+    },
+    "dependencies": {
+        "clerk": "^0.8.3"
+    }
+}

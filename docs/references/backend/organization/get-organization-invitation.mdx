@@ -1,0 +1,62 @@
+---
+title: '`getOrganizationInvitation()`'
+description: Use Clerk's Backend SDK to retrieve an organization invitation.
+---
+
+{/* clerk/javascript file: https://github.com/clerk/javascript/blob/main/packages/backend/src/api/endpoints/OrganizationApi.ts#L259 */}
+
+Retrieves an [`OrganizationInvitation`](/docs/references/backend/types/backend-organization-invitation).
+
+```ts
+function getOrganizationInvitation(
+  params: GetOrganizationInvitationParams,
+): Promise<OrganizationInvitation>
+```
+
+## `GetOrganizationInvitationParams`
+
+<Properties>
+  - `organizationId`
+  - `string`
+
+  The ID of the organization that the invitation is for.
+
+  ---
+
+  - `invitationId`
+  - `string`
+
+  The ID of the invitation to retrieve.
+</Properties>
+
+## Example
+
+```tsx
+const organizationId = 'org_123'
+
+const invitationId = 'orginv_123'
+
+const response = await clerkClient.organizations.getOrganizationInvitation({
+  organizationId,
+  invitationId,
+})
+
+console.log(response)
+/*
+_OrganizationInvitation {
+  id: 'orginv_123',
+  emailAddress: 'testclerk123@gmail.com',
+  role: 'org:admin',
+  organizationId: 'org_123',
+  createdAt: 1705533057154,
+  updatedAt: 1705534258644,
+  status: 'accepted',
+  publicMetadata: {},
+  privateMetadata: {}
+}
+*/
+```
+
+## Backend API (BAPI) endpoint
+
+This method in the SDK is a wrapper around the BAPI endpoint `GET/organizations/{organization_id}/invitations/{invitation_id}`. See the [BAPI reference](/docs/reference/backend-api/tag/Organization-Invitations#operation/GetOrganizationInvitation){{ target: '_blank' }} for more details.

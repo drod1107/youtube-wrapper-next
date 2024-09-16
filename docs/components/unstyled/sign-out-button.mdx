@@ -1,0 +1,315 @@
+---
+title: '`<SignOutButton>`'
+description: The `<SignOutButton>` component is a button that signs a user out.
+---
+
+The `<SignOutButton>` component is a button that signs a user out. By default, it is a `<button>` tag that says **Sign Out**, but it is completely customizable by passing children.
+
+## `<SignOutButton>` properties
+
+<Properties>
+  - `redirectUrl?`
+  - `string`
+
+  The redirect URL to navigate to after sign out is complete.
+
+  ---
+
+  - `signOutOptions?`
+  - [`SignOutOptions`](#sign-out-options)
+
+  Options for signing out. Includes `sessionId` which if passed, signs the user out of a specific session. Useful for multi-session applications.
+
+  ---
+
+  - `children?`
+  - `React.ReactNode`
+
+  Children you want to wrap the `<SignOutButton>` in.
+</Properties>
+
+### `SignOutOptions`
+
+The type of the `signOutOptions` prop for the `<SignOutButton>` component is defined as follows:
+
+<Properties>
+  - `sessionId?`
+  - `string`
+
+  The ID of a specific session to sign out of. Useful for multi-session applications.
+
+  ---
+
+  - `redirectUrl?`
+  - `string`
+
+  The redirect URL to navigate to after sign out is complete.
+</Properties>
+
+## How to use the `<SignOutButton>` component
+
+### Basic usage
+
+<Tabs type="framework" items={["Next.js", "React", "Remix", "Astro"]}>
+  <Tab>
+    <CodeBlockTabs type="router" options={["App Router", "Pages Router"]}>
+      ```jsx {{ filename: 'app/page.js' }}
+      import { SignOutButton } from '@clerk/nextjs'
+
+      export default function Home() {
+        return (
+          <div>
+            <SignOutButton />
+          </div>
+        )
+      }
+      ```
+
+      ```jsx {{ filename: 'pages/index.js' }}
+      import { SignOutButton } from '@clerk/nextjs'
+
+      export default function Home() {
+        return (
+          <div>
+            <SignOutButton />
+          </div>
+        )
+      }
+      ```
+    </CodeBlockTabs>
+  </Tab>
+
+  <Tab>
+    ```jsx {{ filename: 'example.js' }}
+    import { SignOutButton } from '@clerk/clerk-react'
+
+    export default function Example() {
+      return (
+        <div>
+          <SignOutButton />
+        </div>
+      )
+    }
+    ```
+  </Tab>
+
+  <Tab>
+    ```jsx {{ filename: 'pages/index.js' }}
+    import { SignOutButton } from '@clerk/remix'
+
+    export default function Home() {
+      return (
+        <div>
+          <SignOutButton />
+        </div>
+      )
+    }
+    ```
+  </Tab>
+
+  <Tab>
+    ```astro {{ filename: 'pages/index.astro' }}
+    ---
+    import { SignOutButton } from '@clerk/astro/components'
+    ---
+
+    <div>
+      <SignOutButton />
+    </div>
+    ```
+  </Tab>
+</Tabs>
+
+### Custom usage
+
+You can create a custom button by wrapping your own button, or button text, in the `<SignOutButton>` component.
+
+<Tabs type="framework" items={["Next.js", "React", "Remix", "Astro"]}>
+  <Tab>
+    <CodeBlockTabs type="router" options={["App Router", "Pages Router"]}>
+      ```jsx {{ filename: 'app/page.js' }}
+      import { SignOutButton } from '@clerk/nextjs'
+
+      export default function Home() {
+        return (
+          <div>
+            <SignOutButton>
+              <button>Sign out</button>
+            </SignOutButton>
+          </div>
+        )
+      }
+      ```
+
+      ```jsx {{ filename: 'pages/index.js' }}
+      import { SignOutButton } from '@clerk/nextjs'
+
+      export default function Home() {
+        return (
+          <div>
+            <SignOutButton>
+              <button>Sign out</button>
+            </SignOutButton>
+          </div>
+        )
+      }
+      ```
+    </CodeBlockTabs>
+  </Tab>
+
+  <Tab>
+    ```jsx {{ filename: 'example.js' }}
+    import { SignOutButton } from '@clerk/clerk-react'
+
+    export default function Example() {
+      return (
+        <div>
+          <SignOutButton>
+            <button>Sign out</button>
+          </SignOutButton>
+        </div>
+      )
+    }
+    ```
+  </Tab>
+
+  <Tab>
+    ```jsx {{ filename: 'pages/index.js' }}
+    import { SignOutButton } from '@clerk/remix'
+
+    export default function Home() {
+      return (
+        <div>
+          <SignOutButton>
+            <button>Sign out</button>
+          </SignOutButton>
+        </div>
+      )
+    }
+    ```
+  </Tab>
+
+  <Tab>
+    ```astro {{ filename: 'pages/index.astro' }}
+    ---
+    import { SignOutButton } from '@clerk/astro/components'
+    ---
+
+    <div>
+      <SignOutButton as="button"> Sign out </SignOutButton>
+    </div>
+    ```
+  </Tab>
+</Tabs>
+
+### Multi-session usage
+
+#### Sign out of all sessions
+
+Clicking the `<SignOutButton>` component signs the user out of all sessions. This is the default behavior.
+
+#### Sign out of a specific session
+
+You can sign out of a specific session by passing in a `sessionId` to the `signOutOptions` prop. This is useful for signing a single account out of a multi-session (multiple account) application.
+
+In the example below, the `sessionId` is retrieved from the [`useAuth()`](/docs/references/react/use-auth) hook. If the user is not signed in, the `sessionId` will be `null`, and the user is shown the [`<SignInButton>`](/docs/components/unstyled/sign-in-button) component. If the user is signed in, the user is shown the `<SignOutButton>` component, which when clicked, signs the user out of that specific session.
+
+<Tabs type="framework" items={["Next.js", "React", "Remix"]}>
+  <Tab>
+    <CodeBlockTabs type="router" options={["App Router", "Pages Router"]}>
+      ```tsx {{ filename: 'app/page.tsx' }}
+      'use client'
+
+      import { SignInButton, SignOutButton, useAuth } from '@clerk/nextjs'
+
+      export default function Home() {
+        const { sessionId } = useAuth()
+
+        if (!sessionId) {
+          return (
+            <div>
+              <SignInButton />
+            </div>
+          )
+        }
+
+        return (
+          <div>
+            <SignOutButton signOutOptions={{ sessionId }} />
+          </div>
+        )
+      }
+      ```
+
+      ```tsx {{ filename: 'pages/index.tsx' }}
+      import { SignInButton, SignOutButton, useAuth } from '@clerk/nextjs'
+
+      export default function Home() {
+        const { sessionId } = useAuth()
+
+        if (!sessionId) {
+          return (
+            <div>
+              <SignInButton />
+            </div>
+          )
+        }
+
+        return (
+          <div>
+            <SignOutButton signOutOptions={{ sessionId }} />
+          </div>
+        )
+      }
+      ```
+    </CodeBlockTabs>
+  </Tab>
+
+  <Tab>
+    ```jsx {{ filename: 'example.js' }}
+    import { SignInButton, SignOutButton, useAuth } from '@clerk/clerk-react'
+
+    export default function Home() {
+      const { sessionId } = useAuth()
+
+      if (!sessionId) {
+        return (
+          <div>
+            <SignInButton />
+          </div>
+        )
+      }
+
+      return (
+        <div>
+          <SignOutButton signOutOptions={{ sessionId }} />
+        </div>
+      )
+    }
+    ```
+  </Tab>
+
+  <Tab>
+    ```jsx {{ filename: 'pages/index.js' }}
+    import { SignInButton, SignOutButton, useAuth } from '@clerk/remix'
+
+    export default function Home() {
+      const { sessionId } = useAuth()
+
+      if (!sessionId) {
+        return (
+          <div>
+            <SignInButton />
+          </div>
+        )
+      }
+
+      return (
+        <div>
+          <SignOutButton signOutOptions={{ sessionId }} />
+        </div>
+      )
+    }
+    ```
+  </Tab>
+</Tabs>

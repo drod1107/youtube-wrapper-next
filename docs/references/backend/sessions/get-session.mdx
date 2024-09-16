@@ -1,0 +1,48 @@
+---
+title: '`getSession()`'
+description: Use Clerk's Backend SDK to retrieve a single session by its ID.
+---
+
+{/* clerk/javascript file: https://github.com/clerk/javascript/blob/main/packages/backend/src/api/endpoints/SessionApi.ts/#L26 */}
+
+Retrieves a single [`Session`](/docs/references/backend/types/backend-session).
+
+```ts
+function getSession(sessionId: string): Promise<Session>
+```
+
+## Parameters
+
+<Properties>
+  - `sessionId`
+  - `string`
+
+  The ID of the session to retrieve.
+</Properties>
+
+## Example
+
+```tsx
+const sessionId = 'sess_123'
+
+const response = await clerkClient.sessions.getSession(sessionId)
+
+console.log(response)
+/*
+_Session {
+  id: 'sess_123',
+  clientId: 'client_123',
+  userId: 'user_123',
+  status: 'active',
+  lastActiveAt: 1705593792894,
+  expireAt: 1706135713248,
+  abandonAt: 1708122913248,
+  createdAt: 1705530913248,
+  updatedAt: 1705593792894
+}
+*/
+```
+
+## Backend API (BAPI) endpoint
+
+This method in the SDK is a wrapper around the BAPI endpoint `GET/sessions/{session_id}`. See the [BAPI reference](/docs/reference/backend-api/tag/Sessions#operation/GetSession){{ target: '_blank' }} for more details.

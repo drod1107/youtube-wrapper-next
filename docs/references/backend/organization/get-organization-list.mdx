@@ -1,0 +1,138 @@
+---
+title: '`getOrganizationList()`'
+description: Use Clerk's Backend SDK to retrieve a list of organizations.
+---
+
+{/* clerk/javascript file: https://github.com/clerk/javascript/blob/main/packages/backend/src/api/endpoints/OrganizationApi.ts#L101 */}
+
+Retrieves a list of organizations.
+
+```ts
+function getOrganizationList(
+  params: GetOrganizationListParams,
+): Promise<PaginatedResourceResponse<Organization[]>>
+```
+
+## `GetOrganizationListParams`
+
+<Properties>
+  - `limit?`
+  - `number`
+
+  The number of results to return. Must be an integer greater than zero and less than 501. Can be used for paginating the results together with `offset`. Defaults to `10`.
+
+  ---
+
+  - `offset?`
+  - `number`
+
+  Skip the first `offset` results when paginating. Needs to be an integer greater or equal to zero. To be used in conjunction with `limit`. Defaults to `0`.
+
+  ---
+
+  - `includeMembersCount?`
+  - `boolean`
+
+  Whether the member counts of each organization should be included in the response or not.
+
+  ---
+
+  - `query?`
+  - `string`
+
+  Filters organizations with ID, name, or slug that match the given query. Uses exact match for organization ID and partial match for name and slug.
+
+  ---
+
+  - `orderBy?`
+  - `'name' | 'created_at' | 'members_count'`
+
+  Return organizations in a particular order. Prefix with a `-` to reverse the order. Prefix with a `+` to list in ascending order. Defaults to `'-created_at'`.
+</Properties>
+
+## Examples
+
+### Basic
+
+In the following example, you can see that the returned [`PaginatedResourceResponse`](/docs/references/backend/types/paginated-resource-response) includes `data`, which is an array of [`Organization`](/docs/references/backend/types/backend-organization) objects, and `totalCount`, which indicates the total number of organizations in the system.
+
+While the response can return up to 10 data items, for the sake of brevity, only two are shown in this example response.
+
+```tsx
+const response = await clerkClient.organizations.getOrganizationList()
+
+console.log(response)
+/*
+{
+  data: [
+    _Organization {
+      id: 'org_123',
+      name: 'Test Org',
+      slug: 'test-org',
+      imageUrl: 'https://img.clerk.com/eyJ...',
+      hasImage: false,
+      createdBy: 'user_123',
+      createdAt: 1705534741971,
+      updatedAt: 1705534741971,
+      publicMetadata: {},
+      privateMetadata: {},
+      maxAllowedMemberships: 3,
+      adminDeleteEnabled: true,
+      members_count: undefined
+    },
+    _Organization {
+      id: 'org_456',
+      name: 'Test Org 2',
+      slug: 'test-org-2',
+      imageUrl: 'https://img.clerk.com/eyJ.',
+      hasImage: false,
+      createdBy: 'user_123',
+      createdAt: 1705526650229,
+      updatedAt: 1705526650229,
+      publicMetadata: {},
+      privateMetadata: {},
+      maxAllowedMemberships: 3,
+      adminDeleteEnabled: true,
+      members_count: undefined
+    },
+    ...
+  ],
+  totalCount: 25,
+}
+*/
+```
+
+### Limit the number of results
+
+Retrieves organization list that is filtered by the number of results.
+
+```tsx
+const { data, totalCount } = await clerkClient.organizations.getOrganizationList({
+  // returns the first 10 results
+  limit: 10,
+})
+```
+
+### Skip results
+
+Retrieves organization list that is filtered by the number of results to skip.
+
+```tsx
+const { data, totalCount } = await clerkClient.organizations.getOrganizationList({
+  // skips the first 10 results
+  offset: 10,
+})
+```
+
+### Filter by query
+
+Retrieves list of organizations that match the query.
+
+```tsx
+// returns organizations that have 'test' in their name
+const { data, totalCount } = await clerkClient.organizations.getOrganizationList({ query: 'test' })
+```
+
+## Backend API (BAPI) endpoint
+
+This method in the SDK is a wrapper around the BAPI endpoint `GET/organizations`. See the [BAPI reference](/docs/reference/backend-api/tag/Organizations#operation/ListOrganizations){{ target: '_blank' }} for more details.
