@@ -1,3 +1,4 @@
+// src/app/sign-in/[[...sign-in]]/page.js
 
 import { SignIn } from "@clerk/nextjs";
 

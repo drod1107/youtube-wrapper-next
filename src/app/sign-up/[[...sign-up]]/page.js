@@ -1,4 +1,5 @@
 // src/app/sign-up/[[...sign-up]]/page.js
+
 'use client';
 
 import { SignUp, useSignUp } from "@clerk/nextjs";

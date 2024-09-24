@@ -1,4 +1,5 @@
 // src/components/Header.js
+
 import Navbar from './Navbar';
 import { UserButton, useUser, SignInButton, SignOutButton, SignUp, SignedIn, SignedOut } from '@clerk/nextjs';
 

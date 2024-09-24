@@ -1,7 +1,7 @@
 // src/components/VideoGallery.js
 import { useEffect, useState } from 'react';
 
-const VideoGallery = ({ playlistId }) => {
+export default function VideoGallery ({ playlistId }) {
   const [videos, setVideos] = useState([]);
 
   useEffect(() => {
@@ -41,4 +41,3 @@ const VideoGallery = ({ playlistId }) => {
   );
 };
 
-export default VideoGallery;

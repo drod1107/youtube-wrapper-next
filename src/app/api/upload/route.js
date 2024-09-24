@@ -1,41 +1,33 @@
 // src/app/api/upload/route.js
-import { NextResponse } from 'next/server';
-import { getAuth } from '@clerk/nextjs/server';
-import clientPromise from '../../../utils/mongodb';
-import { google } from 'googleapis';
 
-const youtube = google.youtube('v3');
+import { NextResponse } from 'next/server';
+import { auth } from '@clerk/nextjs/server';
+import { connectDB } from '@/utils/mongodb';
+import User from '@/models/User';
+import { getAuthenticatedYouTube } from '@/utils/youtube';
 
 export async function POST(req) {
-  const { userId } = getAuth(req);
+  const { userId } = auth();
 
   if (!userId) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   try {
+    const db = await connectDB();
+    const user = await User.findOne({ email: userId });
+
+    if (!user || !user.unlisted_playlist_id) {
+      return NextResponse.json({ error: 'User has no unlisted playlist' }, { status: 404 });
+    }
+
     const formData = await req.formData();
     const file = formData.get('file');
     const title = formData.get('title');
     const description = formData.get('description');
     const tags = formData.get('tags').split(',').map(tag => tag.trim());
 
-    const client = await clientPromise;
-    const db = client.db();
-    const user = await db.collection('users').findOne({ userId: userId });
-
-    if (!user || !user.youtubePlaylistId) {
-      console.error('Error uploading video:', 'User or playlist not found');
-      return NextResponse.json({ error: 'User or playlist not found' }, { status: 404 });
-    }
-
-    const auth = new google.auth.GoogleAuth({
-      credentials: JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS),
-      scopes: ['https://www.googleapis.com/auth/youtube.upload'],
-    });
-
-    const authClient = await auth.getClient();
-    google.options({ auth: authClient });
+    const youtube = await getAuthenticatedYouTube();
 
     const fileStream = file.stream();
     const fileSize = file.size;
@@ -58,15 +50,14 @@ export async function POST(req) {
     });
 
     if (res.status !== 200) {
-      console.error('Error uploading video:', res.data.error);
-      return NextResponse.json({ error: 'An error occurred during video upload' }, { status: 500 });
+      throw new Error(`Failed to upload video: ${res.statusText}`);
     }
 
     const playlistItemRes = await youtube.playlistItems.insert({
       part: 'snippet',
       requestBody: {
         snippet: {
-          playlistId: user.youtubePlaylistId,
+          playlistId: user.unlisted_playlist_id,
           resourceId: {
             kind: 'youtube#video',
             videoId: res.data.id,
@@ -76,8 +67,7 @@ export async function POST(req) {
     });
 
     if (playlistItemRes.status !== 200) {
-      console.error('Error adding video to playlist:', playlistItemRes.data.error);
-      return NextResponse.json({ error: 'An error occurred during video upload' }, { status: 500 });
+      throw new Error(`Failed to add video to playlist: ${playlistItemRes.statusText}`);
     }
 
     return NextResponse.json({ success: true, videoId: res.data.id });

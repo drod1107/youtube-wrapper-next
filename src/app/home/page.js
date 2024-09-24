@@ -1,4 +1,5 @@
 // src/app/home/page.js
+
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -6,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@clerk/nextjs';
 import VideoGallery from '@/components/VideoGallery';
 
-const HomePage = () => {
+export default function HomePage () {
   const { userId } = useAuth();
   const [videos, setVideos] = useState([]);
   const router = useRouter();
@@ -44,5 +45,3 @@ const HomePage = () => {
     </div>
   );
 };
-
-export default HomePage;

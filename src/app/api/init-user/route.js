@@ -1,4 +1,5 @@
 // src/app/api/init-user/route.js
+
 import connectDB from '@/utils/mongodb';
 import { updateUserPlaylists } from '@/utils/mongodb';
 import User from '@/models/User';

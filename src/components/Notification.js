@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 
-const Notification = ({ type, message, onDismiss, duration = 5000 }) => {
+export default function Notification ({ type, message, onDismiss, duration = 5000 }) {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
@@ -35,5 +35,3 @@ const Notification = ({ type, message, onDismiss, duration = 5000 }) => {
     </div>
   );
 };
-
-export default Notification;
